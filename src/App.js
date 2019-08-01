@@ -27,51 +27,76 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 
-const App = () => {
-	
-	const [player, setPlayer] = useState({
-		username: 'jb',
-		coins: 50,
-		number: null
-	});
+const isBroke = (coins) => coins < 1
+const isSameNumber = (a, b) => a === b
 
-	const getNumber = () => {
-        return Math.floor(Math.random() * 5);
+export default class App extends React.Component {
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			player: {
+				username: 'jb',
+				coins: 50,
+				number: null,
+			},
+			cpu: this.getNumber()
+		}
+
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleCpuChange = this.handleCpuChange.bind(this)
+		this.handlePlayerChange = this.handlePlayerChange.bind(this)
+	}
+
+	getNumber() {
+		return Math.floor(Math.random() * 5);
     }
 
-	const [cpu, setCpu] = useState( getNumber() )
-
-
-	const handleSubmit = (value) => {
-		setPlayer({ ...player, username:value })
+	handleSubmit(value) {
+		this.setState({ 'player': { ...this.state.player, 'username': value }})	
 	}
 
-	const handleCpuChange = () => {
-		setCpu( getNumber() )
+	handleCpuChange() {
+		this.setState({ cpu: this.getNumber() }, () => {
+			const { 
+				coins, 
+				number
+			} = this.state.player;
+	
+			if(!isBroke(coins)) {
+				if(isSameNumber(number, this.state.cpu)) {
+					this.handlePlayerChange('coins', coins + 120)
+				}
+				else {
+					this.handlePlayerChange('coins', coins - 1)
+				}
+			}
+			else{
+				watchAd()
+			}
+		})
 	}
 
-	const handlePlayerChange = (key, value) => {
-		setPlayer({ ...player, [key]: value })
+	handlePlayerChange(key, value) {
+		this.setState({ 'player': { ...this.state.player, [key]: value }})
 	}
 
-	const renderGame = () => {
-		if(!player.username){
-			return <LoginScreen onSubmit={handleSubmit} />
+	renderGame() {
+		if(!this.state.player.username) {
+			return <LoginScreen onSubmit={this.handleSubmit} />
 		}
 		return <Game 
-				player={player} 
-				cpu={cpu} 
-				onPlayerChange={handlePlayerChange} 
-				onCpuChange={handleCpuChange}
-
-				/>
+				player={this.state.player} 
+				cpu={this.state.cpu} 
+				onPlayerChange={this.handlePlayerChange} 
+				onCpuChange={this.handleCpuChange} />
 	}
 
-	return (
-		<Fragment>
-			{renderGame()}
-		</Fragment>
-	);
+	render() {
+		return (
+			<Fragment>
+				{this.renderGame()}
+			</Fragment>
+		);
+	}
 };
-
-export default App;

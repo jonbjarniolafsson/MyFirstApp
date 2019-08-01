@@ -65,32 +65,11 @@ const styles = {
 
 
 const Game = (props) => {
-
-    const isSameNumber = props.cpu === props.player.number;
-    const isBroke = props.player.coins <= 0
-
-    if(isSameNumber) {
-        // You win.
-        props.onPlayerChange('coins', props.player.coins + 120)
-    }
-    else if(!isBroke) {
-        props.onPlayerChange('coins', props.player.coins - 1)
-    }
+    const checkIfBroke = () => props.player.coins < 1
+    const checkIfSameNumber = () => props.player.number === props.cpu
 
     const handlePress = () => {
-        
-        props.onCpuChange();
-        if(!checkIfBroke()){
-            if(checkIfSameNumber()){
-                props.onPlayerChange('coins', props.player.coins + 120)
-            }else{
-                props.onPlayerChange('coins', props.player.coins - 1)
-            }
-            //Ný tala fyrir cpu
-        }
-        else{
-            watchAd()
-        }
+        props.onCpuChange()
     }
 
     
