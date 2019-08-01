@@ -66,19 +66,20 @@ const styles = {
 
 const Game = (props) => {
 
-    const checkIfSameNumber = () => {
-        console.log(props.cpu, props.player.number)
-        return props.cpu === props.player.number
-    }	
-    const checkIfBroke = () => props.player.coins <= 0
+    const isSameNumber = props.cpu === props.player.number;
+    const isBroke = props.player.coins <= 0
+
+    if(isSameNumber) {
+        // You win.
+        props.onPlayerChange('coins', props.player.coins + 120)
+    }
+    else if(!isBroke) {
+        props.onPlayerChange('coins', props.player.coins - 1)
+    }
 
     const handlePress = () => {
         
         props.onCpuChange();
-
-        console.log(checkIfBroke())
-        console.log(checkIfSameNumber())
-
         if(!checkIfBroke()){
             if(checkIfSameNumber()){
                 props.onPlayerChange('coins', props.player.coins + 120)
