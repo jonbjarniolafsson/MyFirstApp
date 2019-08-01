@@ -65,39 +65,53 @@ const styles = {
 
 
 const Game = (props) => {
+
+    const checkIfSameNumber = () => {
+        console.log(props.cpu, props.player.number)
+        return props.cpu === props.player.number
+    }	
+    const checkIfBroke = () => props.player.coins <= 0
+
     const handlePress = () => {
+        
         props.onCpuChange();
-        props.onPlayerChange('coins', props.player.coins - 1)
+
+        console.log(checkIfBroke())
+        console.log(checkIfSameNumber())
+
+        if(!checkIfBroke()){
+            if(checkIfSameNumber()){
+                props.onPlayerChange('coins', props.player.coins + 120)
+            }else{
+                props.onPlayerChange('coins', props.player.coins - 1)
+            }
+            //Ný tala fyrir cpu
+        }
+        else{
+            watchAd()
+        }
     }
 
-    const checkIfSame = () => {
-		if(cpu == player.coins){
-			return true
-		}
-		return false
-	}
-
-	const checkIfBroke = () =>{
-		if(player.coins <= 0){
-			return true
-		}
-		return false
-	}
     
+    watchAd = () =>{
+        // TODO
+        props.onPlayerChange('coins', props.player.coins + 20);        
+    }
+
     return (
         <View style={ styles.root }>
             <View style={ styles.coins }>
                 <Text style={ styles.coinsText }>{ props.player.coins } coins</Text>
             </View>
             <TextInput 
-                onChangeText={(value) =>  props.onPlayerChange('number', value)} 
+                onChangeText={(value) =>  props.onPlayerChange('number', parseInt(value))} 
                 placeholder="Choose number"
                 keyboardType={'numeric'}
                 style={styles.userInput}
             />
             <TouchableOpacity 
                 disabled={!props.player.number}
-                onPress={handlePress} 
+                onPress={handlePress}   
                 style={ styles.btn }>                    
                 <Text style={ styles.btnText }>Spin the wheel</Text>
             </TouchableOpacity>

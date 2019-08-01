@@ -30,13 +30,13 @@ import {
 const App = () => {
 	
 	const [player, setPlayer] = useState({
-		username: '',
+		username: 'jb',
 		coins: 50,
 		number: null
 	});
 
-	const getNumber = () =>{
-        return Math.floor(Math.random() * 100);
+	const getNumber = () => {
+        return Math.floor(Math.random() * 5);
     }
 
 	const [cpu, setCpu] = useState( getNumber() )
@@ -53,8 +53,6 @@ const App = () => {
 	const handlePlayerChange = (key, value) => {
 		setPlayer({ ...player, [key]: value })
 	}
-
-	
 
 	const renderGame = () => {
 		if(!player.username){
